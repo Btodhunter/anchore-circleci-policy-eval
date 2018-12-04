@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: build container
-          command: docker build -t ${CIRCLE_PROJECT_REPONAME}:policy_fail -f node_critical_fail/Dockerfile node_critical_fail/
+          command: docker build -t "${CIRCLE_PROJECT_REPONAME}:policy_fail" -f node_critical_fail/Dockerfile node_critical_fail/
       - anchore/analyze_local_image:
           image_name: ${CIRCLE_PROJECT_REPONAME}:policy_fail
           policy_failure: True
@@ -17,9 +17,9 @@ jobs:
           name: push container
           command: |
             export IMAGE_NAME='btodhunter/circleci-demo:policy-fail'
-            docker login ${DOCKER_USER} ${DOCKER_PASS}
-            docker tag ${CIRCLE_PROJECT_REPONAME}:policy_fail ${IMAGE_NAME}
-            docker push ${IMAGE_NAME}
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+            docker tag "${CIRCLE_PROJECT_REPONAME}:policy_fail" "$IMAGE_NAME"
+            docker push "$IMAGE_NAME"
 
   custom_policy_pass:
     executor: anchore/anchore_engine
@@ -27,7 +27,7 @@ jobs:
       - checkout
       - run:
           name: build container
-          command: docker build -t ${CIRCLE_PROJECT_REPONAME}:policy_pass -f node_critical_pass/Dockerfile node_critical_pass/
+          command: docker build -t "${CIRCLE_PROJECT_REPONAME}:policy_pass" -f node_critical_pass/Dockerfile node_critical_pass/
       - anchore/analyze_local_image:
           image_name: ${CIRCLE_PROJECT_REPONAME}:policy_pass
           policy_failure: True
@@ -36,9 +36,9 @@ jobs:
           name: push container
           command: |
             export IMAGE_NAME='btodhunter/circleci-demo:policy-pass'
-            docker login ${DOCKER_USER} ${DOCKER_PASS}
-            docker tag ${CIRCLE_PROJECT_REPONAME}:policy_fail ${IMAGE_NAME}
-            docker push ${IMAGE_NAME}
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+            docker tag "${CIRCLE_PROJECT_REPONAME}:policy_fail" "$IMAGE_NAME"
+            docker push "$IMAGE_NAME"
 
 workflows:
   scan_image:
